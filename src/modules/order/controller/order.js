@@ -1,7 +1,7 @@
 import moment from "moment";
 import { nanoid } from "nanoid";
 import Stripe from "stripe";
-import orderModel from "../../../../DB/model/order.model.js";
+import orderModel from "../../../../DB/model/Order.model.js";
 import { asyncHandler } from "../../../utils/ErrorHandling.js";
 
 const stripe = Stripe(
