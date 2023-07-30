@@ -11,8 +11,7 @@ const customId = nanoid();
 
 let endpointSecret;
 
-endpointSecret =
-  "whsec_cbc4f43e2c9353d5f278073bec34a6c95cf2d4128e92c8818a4b044c900d0c71";
+endpointSecret = "whsec_XUCkRjfQZ2CgrDBUwb1AFrcR2kqr4kFb";
 
 export const customers = asyncHandler(async (req, res) => {
   const { cartItems, userId } = req.body;
@@ -105,8 +104,8 @@ export const customers = asyncHandler(async (req, res) => {
     customer: customer.id,
     line_items,
     mode: "payment",
-    success_url: `http://localhost:5173/checkout-success/${customId}`,
-    cancel_url: `http://localhost:5173/cart`,
+    success_url: `${process.env.SUCCESS_URL}/${customId}`,
+    cancel_url: `${process.env.CANCEL_URL}/cart`,
   });
 
   return res.status(200).json({ url: session.url });
@@ -127,7 +126,7 @@ const createOrder = async (customer, data) => {
   });
 
   try {
-    const savedOrder = await newOrder.save();
+    await newOrder.save();
   } catch (error) {
     return error;
   }
@@ -166,6 +165,40 @@ export const webhook = asyncHandler(async (req, res) => {
 
   res.send().end();
 });
+
+// export const webhook = asyncHandler(async (req, res) => {
+//   const sig = request.headers["stripe-signature"];
+
+//   let event;
+
+//   try {
+//     event = stripe.webhooks.constructEvent(request.body, sig, endpointSecret);
+//   } catch (err) {
+//     response.status(400).send(`Webhook Error: ${err.message}`);
+//     return;
+//   }
+
+//   // Handle the event
+//   switch (event.type) {
+//     case "checkout.session.async_payment_failed":
+//       const checkoutSessionAsyncPaymentFailed = event.data.object;
+//        break;
+//     case "checkout.session.async_payment_succeeded":
+//       const checkoutSessionAsyncPaymentSucceeded = event.data.object;
+//        break;
+//     case "checkout.session.completed":
+//       const checkoutSessionCompleted = event.data.object;
+//        break;
+//     case "checkout.session.expired":
+//       const checkoutSessionExpired = event.data.object;
+//        break;
+//      default:
+//       console.log(`Unhandled event type ${event.type}`);
+//   }
+
+//   // Return a 200 response to acknowledge receipt of the event
+//   response.send().end();
+// });
 
 export const ordersList = asyncHandler(async (req, res, next) => {
   const { NEW } = req.query;
