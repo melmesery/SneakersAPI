@@ -1,5 +1,4 @@
 import moment from "moment";
-// import { nanoid } from "nanoid";
 import Stripe from "stripe";
 import orderModel from "../../../../DB/model/Order.model.js";
 import { asyncHandler } from "../../../utils/ErrorHandling.js";
@@ -7,7 +6,6 @@ import { asyncHandler } from "../../../utils/ErrorHandling.js";
 const stripe = Stripe(
   "sk_test_51N0sHwLQx2XYtCqsDtlYyujklMnTqY3sRySWPZElzmSnoSk0CTWX5TJQ27CzUz6PogWRhSLygLrjYkFI5JENmiB6003hXCq0ye"
 );
-// const customId = nanoid();
 
 let endpointSecret;
 
@@ -15,7 +13,6 @@ endpointSecret = "whsec_XUCkRjfQZ2CgrDBUwb1AFrcR2kqr4kFb";
 
 export const customers = asyncHandler(async (req, res) => {
   const { cartItems, userId } = req.body;
-  console.log(req.user._id);
   const customer = await stripe.customers.create({
     metadata: {
       userId,
@@ -105,7 +102,7 @@ export const customers = asyncHandler(async (req, res) => {
     customer: customer.id,
     line_items,
     mode: "payment",
-    success_url: `${process.env.SUCCESS_URL}/${req.user._id}`,
+    success_url: `${process.env.SUCCESS_URL}/${userId}`,
     cancel_url: `${process.env.CANCEL_URL}`,
   });
 

@@ -2,16 +2,10 @@ import express, { Router } from "express";
 import { validation } from "../../middleware/validation.js";
 import * as validators from "../order/order.validation.js";
 import * as orderController from "./controller/order.js";
-import endPoint from "./order.endPoint.js";
-import { auth } from "../../middleware/auth.js";
 
 const router = Router();
 
-router.post(
-  "/create-checkout-session",
-  auth(endPoint.create),
-  orderController.customers
-);
+router.post("/create-checkout-session", orderController.customers);
 
 router.post(
   "/webhook",
