@@ -78,7 +78,9 @@ export const confirmEmail = asyncHandler(async (req, res) => {
     { confirmEmail: true }
   );
   return User.modifiedCount
-    ? res.status(200).redirect("https://www.facebook.com")
+    ? res
+        .status(200)
+        .redirect(`${process.env.CLIENT}/email-confirmation/${req.user._id}`)
     : res.status(404).send("Account not registered");
 });
 
@@ -102,7 +104,9 @@ export const newConfirmEmail = asyncHandler(async (req, res, next) => {
   if (!(await sendEmail({ to: email, subject: "Confirm Email", html }))) {
     return next(new Error("Rejected email", { cause: 400 }));
   }
-  return res.status(200).send("Please, check your email");
+  return res
+    .status(200)
+    .redirect(`${process.env.CLIENT}/check-email/${req.user._id}`);
 });
 
 export const login = asyncHandler(async (req, res, next) => {
