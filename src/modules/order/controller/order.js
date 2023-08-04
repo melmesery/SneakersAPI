@@ -166,40 +166,6 @@ export const webhook = asyncHandler(async (req, res) => {
   res.send().end();
 });
 
-// export const webhook = asyncHandler(async (req, res) => {
-//   const sig = request.headers["stripe-signature"];
-
-//   let event;
-
-//   try {
-//     event = stripe.webhooks.constructEvent(request.body, sig, endpointSecret);
-//   } catch (err) {
-//     response.status(400).send(`Webhook Error: ${err.message}`);
-//     return;
-//   }
-
-//   // Handle the event
-//   switch (event.type) {
-//     case "checkout.session.async_payment_failed":
-//       const checkoutSessionAsyncPaymentFailed = event.data.object;
-//        break;
-//     case "checkout.session.async_payment_succeeded":
-//       const checkoutSessionAsyncPaymentSucceeded = event.data.object;
-//        break;
-//     case "checkout.session.completed":
-//       const checkoutSessionCompleted = event.data.object;
-//        break;
-//     case "checkout.session.expired":
-//       const checkoutSessionExpired = event.data.object;
-//        break;
-//      default:
-//       console.log(`Unhandled event type ${event.type}`);
-//   }
-
-//   // Return a 200 response to acknowledge receipt of the event
-//   response.send().end();
-// });
-
 export const ordersList = asyncHandler(async (req, res, next) => {
   const { NEW } = req.query;
   const orders = NEW
@@ -242,23 +208,25 @@ export const earnings = asyncHandler(async (_, res) => {
     .month(moment().month() - 1)
     .set("date", 1)
     .format("YYYY-MM-DD hh:mm:ss");
-  const income = await orderModel.aggregate([
-    {
-      $match: { createdAt: { $gte: new Date(previousMonth) } },
-    },
-    {
-      $project: {
-        month: { $month: "$createdAt" },
-        sales: "$total",
+  const income = await orderModel
+    .aggregate([
+      {
+        $match: { createdAt: { $gte: new Date(previousMonth) } },
       },
-    },
-    {
-      $group: {
-        _id: "$month",
-        total: { $sum: "$sales" },
+      {
+        $project: {
+          month: { $month: "$createdAt" },
+          sales: "$total",
+        },
       },
-    },
-  ]);
+      {
+        $group: {
+          _id: "$month",
+          total: { $sum: "$sales" },
+        },
+      },
+    ])
+    .sort({ _id: -1 });
   return res.status(200).send(income);
 });
 
