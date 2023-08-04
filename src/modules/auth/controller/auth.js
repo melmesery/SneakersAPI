@@ -1,3 +1,4 @@
+import { nanoid } from "nanoid";
 import userModel from "../../../../DB/model/User.model.js";
 import { asyncHandler } from "../../../utils/ErrorHandling.js";
 import {
@@ -6,6 +7,8 @@ import {
 } from "../../../utils/GenerateAndVerifyToken.js";
 import { compare, hash } from "../../../utils/HashAndCompare.js";
 import sendEmail from "../../../utils/SendEmail.js";
+
+const randomId = nanoid();
 
 export const signUp = asyncHandler(async (req, res, next) => {
   const { userName, email, password, key } = req.body;
@@ -80,7 +83,7 @@ export const confirmEmail = asyncHandler(async (req, res) => {
   return User.modifiedCount
     ? res
         .status(200)
-        .redirect(`${process.env.CLIENT}/email-confirmation/${req.user._id}`)
+        .redirect(`${process.env.CLIENT}/email-confirmation/${randomId}`)
     : res.status(404).send("Account not registered");
 });
 
@@ -106,7 +109,7 @@ export const newConfirmEmail = asyncHandler(async (req, res, next) => {
   }
   return res
     .status(200)
-    .redirect(`${process.env.CLIENT}/check-email/${req.user._id}`);
+    .redirect(`${process.env.CLIENT}/check-email/${randomId}`);
 });
 
 export const login = asyncHandler(async (req, res, next) => {
