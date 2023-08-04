@@ -105,7 +105,7 @@ export const customers = asyncHandler(async (req, res) => {
     line_items,
     mode: "payment",
     success_url: `${process.env.SUCCESS_URL}/${customId}`,
-    cancel_url: `${process.env.CANCEL_URL}/cart`,
+    cancel_url: `${process.env.CANCEL_URL}`,
   });
 
   return res.status(200).json({ url: session.url });
