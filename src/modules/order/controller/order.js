@@ -15,6 +15,7 @@ endpointSecret = "whsec_XUCkRjfQZ2CgrDBUwb1AFrcR2kqr4kFb";
 
 export const customers = asyncHandler(async (req, res) => {
   const { cartItems, userId } = req.body;
+  console.log(req.user._id);
   const customer = await stripe.customers.create({
     metadata: {
       userId,
