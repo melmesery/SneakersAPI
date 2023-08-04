@@ -8,7 +8,7 @@ import {
 import { compare, hash } from "../../../utils/HashAndCompare.js";
 import sendEmail from "../../../utils/SendEmail.js";
 
-const randomId = nanoid();
+const randomId = nanoid(/12345678A~Za~z/);
 
 export const signUp = asyncHandler(async (req, res, next) => {
   const { userName, email, password, key } = req.body;
@@ -83,7 +83,7 @@ export const confirmEmail = asyncHandler(async (req, res) => {
   return User.modifiedCount
     ? res
         .status(200)
-        .redirect(`${process.env.CLIENT}/email-confirmation/${randomId}`)
+        .redirect(`${process.env.CLIENT}/email-confirmation-${randomId}`)
     : res.status(404).send("Account not registered");
 });
 
