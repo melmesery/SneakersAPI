@@ -22,7 +22,7 @@ const userSchema = new Schema(
     role: {
       type: String,
       default: "User",
-      enum: ["User", "Admin", "Super Admin"],
+      enum: ["User", "Admin", "Super Admin", "Tester"],
     },
     confirmEmail: {
       type: Boolean,

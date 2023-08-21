@@ -6,6 +6,7 @@ export const roles = {
   SuperAdmin: "Super Admin",
   Admin: "Admin",
   User: "User",
+  Tester: "Tester",
 };
 
 export const auth = (accessRoles = []) => {
